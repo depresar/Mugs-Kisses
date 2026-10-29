@@ -47,7 +47,7 @@ var IMG={
   var TYPE={malye:'Малая тарелка',glubokie:'Глубокая тарелка',bluda:'Блюдо',chashki:'Чашки и стаканы',vazy:'Ваза',plitka:'Декоративная плитка'};
   var TAG={stock:['В наличии','t-stock'],order:['Под заказ','t-order'],new:['Новинка','t-new'],hit:['Хит продаж','t-hit']};
   var byId={}; P.forEach(function(p){byId[p.id]=p; p.type=TYPE[p.sub||p.cat]; p.stock=p.tags.indexOf('stock')>=0;});
-  var favs={}, cart=0;
+  var favs={}, cart={};
   var HEART='<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 017-2.6A4 4 0 0119 10c0 5.6-7 10-7 10z"/></svg>';
   function tags(p){return p.tags.map(function(t){return '<span class="tag '+TAG[t][1]+'">'+TAG[t][0]+'</span>';}).join('');}
   function card(p){
@@ -69,10 +69,10 @@ var IMG={
 
   /* избранное, корзина, ленты */
   function setFav(id,on){favs[id]=on;$$('[data-fav="'+id+'"]').forEach(function(b){b.setAttribute('aria-pressed',on);b.setAttribute('aria-label',on?'Убрать из избранного':'Добавить в избранное');});
-    $('#favCount').textContent=Object.keys(favs).filter(function(k){return favs[k];}).length;}
+    $('#favCount').textContent=Object.keys(favs).filter(function(k){return favs[k];}).length;renderFav();}
   document.addEventListener('click',function(e){
     var b=e.target.closest('[data-fav]'); if(b){setFav(b.dataset.fav,b.getAttribute('aria-pressed')!=='true');return;}
-    if(e.target.closest('[data-add]')){cart++;$('#cartCount').textContent=cart;return;}
+    var ad=e.target.closest('[data-add]'); if(ad){addToCart(ad.dataset.add);return;}
     var a=e.target.closest('[data-scroll]'); if(a){var t=document.getElementById(a.dataset.scroll);t.scrollBy({left:(+a.dataset.dir)*t.clientWidth*0.8,behavior:'smooth'});}
   });
 
@@ -85,6 +85,47 @@ var IMG={
   document.addEventListener('click',function(e){if(!drop.hidden&&!drop.contains(e.target)&&e.target!==catBtn)setDrop(false);if(!mnav.hidden&&!mnav.contains(e.target)&&!burger.contains(e.target))setBurger(false);});
   document.addEventListener('keydown',function(e){if(e.key==='Escape'){setDrop(false);setBurger(false);}});
 
+  /* ===== окна: поиск, избранное, корзина ===== */
+  var pops={search:[$('#searchBtn'),$('#searchPop')],fav:[$('#favBtn'),$('#favPop')],cart:[$('#cartBtn'),$('#cartPop')]};
+  function closePops(except){Object.keys(pops).forEach(function(k){if(k!==except){pops[k][1].hidden=true;pops[k][0].setAttribute('aria-expanded','false');}});}
+  function togglePop(k){var p=pops[k],open=p[1].hidden;closePops();setDrop(false);setBurger(false);p[1].hidden=!open;p[0].setAttribute('aria-expanded',open);
+    if(open&&k==='search'){var i=$('#searchInput');setTimeout(function(){i.focus();},30);doSearch();}
+    if(open&&k==='fav')renderFav(); if(open&&k==='cart')renderCart();}
+  Object.keys(pops).forEach(function(k){pops[k][0].addEventListener('click',function(e){e.stopPropagation();togglePop(k);});});
+  $$('[data-pop-close]').forEach(function(b){b.addEventListener('click',function(){closePops();});});
+  document.addEventListener('click',function(e){
+    if(e.target.closest('.pop')){ if(e.target.closest('.pop a[href]'))closePops(); return; }
+    closePops();});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')closePops();});
+  function row(p,extra){return '<li class="pop-item"><img src="'+IMG[p.img]+'" alt=""><a href="#product/'+p.id+'"><b>'+esc(p.name)+'</b><small>'+p.type+' · [ЦЕНА] ₽</small></a>'+(extra||'')+'</li>';}
+  var RM='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+  function renderFav(){var ids=Object.keys(favs).filter(function(k){return favs[k];});
+    $('#favList').innerHTML=ids.length?ids.map(function(id){return row(byId[id],'<button type="button" class="rm" data-unfav="'+id+'" aria-label="Убрать из избранного">'+RM+'</button>');}).join(''):'<li class="pop-empty">Здесь появятся понравившиеся работы — нажмите на сердечко у товара</li>';}
+  function cartCount(){return Object.keys(cart).reduce(function(a,k){return a+cart[k];},0);}
+  function renderCart(){var ids=Object.keys(cart).filter(function(k){return cart[k]>0;}), n=cartCount();
+    $('#cartCount').textContent=n;
+    $('#cartList').innerHTML=ids.length?ids.map(function(id){return row(byId[id],'<div class="qty"><button type="button" data-qty="'+id+'" data-d="-1" aria-label="Меньше">−</button><span>'+cart[id]+'</span><button type="button" data-qty="'+id+'" data-d="1" aria-label="Больше">+</button></div>');}).join(''):'<li class="pop-empty">Корзина пока пуста</li>';
+    $('#cartFoot').hidden=!ids.length; $('#cartQty').textContent=plural(n);}
+  var toastT;
+  function toast(t){var el=$('.toast');if(!el){el=document.createElement('div');el.className='toast';el.setAttribute('role','status');document.body.appendChild(el);}el.textContent=t;el.hidden=false;clearTimeout(toastT);toastT=setTimeout(function(){el.hidden=true;},1800);}
+  function addToCart(id){cart[id]=(cart[id]||0)+1;renderCart();toast('«'+byId[id].name.replace(/^.*?«|»$/g,'')+'» в корзине');}
+  document.addEventListener('click',function(e){
+    var u=e.target.closest('[data-unfav]'); if(u){e.stopPropagation();setFav(u.dataset.unfav,false);return;}
+    var q=e.target.closest('[data-qty]'); if(q){e.stopPropagation();var id=q.dataset.qty;cart[id]=Math.max(0,(cart[id]||0)+(+q.dataset.d));if(!cart[id])delete cart[id];renderCart();}
+  },true);
+  /* поиск по названию, виду и разделу */
+  function norm(t){return String(t).toLowerCase().replace(/ё/g,'е');}
+  function findProducts(q){q=norm(q).trim(); if(!q)return [];
+    var words=q.split(/\s+/).map(function(w){return w.length>4?w.replace(/(ами|ями|ов|ей|ы|и|а|я|у|ю|е|о|ь)$/,''):w;});
+    return P.filter(function(p){var c=CATS.filter(function(x){return x.slug===p.cat;})[0];var hay=norm(p.name+' '+p.type+' '+(c?c.name:'')+' '+(p.sub?SUBS[p.sub]:''));return words.every(function(w){return hay.indexOf(w)>=0;});});}
+  function doSearch(){var q=$('#searchInput').value, r=findProducts(q);
+    if(!q.trim()){$('#searchList').innerHTML='<li class="pop-empty">Начните вводить название — например, «лимоны» или «блюдо»</li>';$('#searchMore').innerHTML='';return;}
+    $('#searchList').innerHTML=r.length?r.slice(0,6).map(function(p){return row(p);}).join(''):'<li class="pop-empty">Ничего не нашлось. Попробуйте другое слово</li>';
+    $('#searchMore').innerHTML=r.length>6?'<a class="search-all" href="#search/'+encodeURIComponent(q.trim())+'">Показать все — '+plural(r.length)+'</a>':'';}
+  $('#searchInput').addEventListener('input',doSearch);
+  $('#searchForm').addEventListener('submit',function(e){e.preventDefault();var q=$('#searchInput').value.trim();if(q){closePops();location.hash='#search/'+encodeURIComponent(q);}});
+  $('#checkout').addEventListener('click',function(){closePops();});
+
   /* формы */
   function wire(form,onDone){form.addEventListener('submit',function(e){e.preventDefault();if(!form.checkValidity()){form.reportValidity();return;}if(onDone)onDone(form);$('.js-body',form).style.display='none';$('.js-done',form).hidden=false;});}
   wire($('#orderForm'));wire($('#mcForm'));
@@ -94,8 +135,14 @@ var IMG={
     var stars='<div class="stars" role="img" aria-label="Оценка '+r+' из 5">'+new Array(r+1).join(STAR)+'</div>';
     var fig=document.createElement('figure'); fig.className='rev fresh';
     fig.innerHTML=stars+'<blockquote>'+esc(f.text.value.trim())+'</blockquote><figcaption><span class="ava" aria-hidden="true">'+esc(n.charAt(0).toUpperCase())+'</span><span><span style="display:block">'+esc(n)+'</span><span class="meta">'+esc(w)+'</span></span></figcaption>';
-    $('#revList').insertBefore(fig,$('#revList').firstChild);
+    $('#revList').insertBefore(fig,$('#revList').firstChild); $('#revList').scrollLeft=0; clampReviews();
   });
+
+  /* длинные отзывы: «Читать полностью» */
+  function clampReviews(){$$('#revList .rev').forEach(function(r){var q=$('blockquote',r),b=$('.more-btn',r);
+    if(b||r.classList.contains('open'))return; if(q.scrollHeight>q.clientHeight+2){b=document.createElement('button');b.type='button';b.className='more-btn';b.textContent='Читать полностью';b.setAttribute('aria-expanded','false');
+      b.addEventListener('click',function(){var o=r.classList.toggle('open');b.textContent=o?'Свернуть':'Читать полностью';b.setAttribute('aria-expanded',o);});q.after(b);}});}
+  window.addEventListener('load',clampReviews); setTimeout(clampReviews,300);
 
   /* поп-апы */
   var lastFocus=null;
@@ -106,7 +153,9 @@ var IMG={
   var d=new Date(),pad=function(n){return n<10?'0'+n:n};$('#mcDate').min=d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
   $$('[data-open-mc]').forEach(function(b){b.addEventListener('click',function(){openModal($('#mcModal'),function(f){var r=$('input[name=fmt][value="'+b.dataset.openMc+'"]',f);if(r)r.checked=true;});});});
   $('#openRev').addEventListener('click',function(){openModal($('#revModal'));});
-  document.addEventListener('click',function(e){var a=e.target.closest('a[href="#order"]');if(!a)return;e.preventDefault();setDrop(false);setBurger(false);openModal($('#orderModal'));});
+  document.addEventListener('click',function(e){var a=e.target.closest('a[href="#order"]');if(!a)return;e.preventDefault();setDrop(false);setBurger(false);
+    var fromCart=a.id==='checkout';
+    openModal($('#orderModal'),function(f){if(fromCart){f.idea.value='Хочу заказать: '+Object.keys(cart).map(function(id){return byId[id].name+' × '+cart[id];}).join(', ');}});});
   if(location.hash==='#order'){history.replaceState(null,'',location.pathname);setTimeout(function(){openModal($('#orderModal'));},50);}
 
   /* ===== страница каталога ===== */
@@ -114,7 +163,7 @@ var IMG={
   function iconFor(slug){if(slug==='all')return ALL_ICON;var s=$('.cat[data-slug="'+slug+'"] .cat-pic');return s?s.innerHTML:'';}
   var strip=$('#catStrip');
   strip.innerHTML=CATS.map(function(c){return '<a class="mini" href="#catalog/'+c.slug+'" data-mini="'+c.slug+'"><span class="cat-pic">'+iconFor(c.slug)+'</span><span class="mini-name">'+c.name+'</span></a>';}).join('');
-  var st={slug:'all',sub:null,f:'all'};
+  var st={slug:'all',sub:null,f:'all',q:''};
   function plural(n){var a=n%10,b=n%100;return n+' '+(a===1&&b!==11?'товар':(a>=2&&a<=4&&(b<10||b>=20)?'товара':'товаров'));}
   var crumb=function(parts){return parts.map(function(p,i){return i===parts.length-1?'<span aria-current="page">'+p[0]+'</span>':'<a href="'+p[1]+'">'+p[0]+'</a><span aria-hidden="true">/</span>';}).join('');};
   function renderCat(){
@@ -125,12 +174,14 @@ var IMG={
     if(st.slug==='tarelki'){subs.hidden=false;subs.innerHTML=[['','Все тарелки']].concat(Object.keys(SUBS).map(function(k){return [k,SUBS[k]];})).map(function(s){return '<a class="sub-chip" href="#catalog/tarelki'+(s[0]?'/'+s[0]:'')+'"'+((st.sub||'')===s[0]?' aria-current="page"':'')+'>'+s[1]+'</a>';}).join('');}
     else subs.hidden=true;
     var title=st.sub?SUBS[st.sub]+' тарелки':c.title; if(st.sub==='bluda')title='Блюда';
+    if(st.q)title='Поиск: «'+st.q+'»';
     $('#catTitle').textContent=title;
     var cr=[['Главная','#top'],['Каталог','#catalog/all']]; if(st.slug!=='all')cr.push([c.name,'#catalog/'+c.slug]); if(st.sub)cr.push([SUBS[st.sub],'']);
     if(cr.length===2)cr[1]=['Каталог',''];
     $('#catCrumbs').innerHTML=crumb(cr);
     $$('[data-cf]').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.cf===st.f);});
-    var items=P.filter(function(p){
+    var found=st.q?findProducts(st.q):null;
+    var items=P.filter(function(p){ if(found&&found.indexOf(p)<0)return false;
       if(st.slug!=='all'&&p.cat!==st.slug)return false; if(st.sub&&p.sub!==st.sub)return false;
       return st.f==='all'||p.tags.indexOf(st.f)>=0;});
     var so=$('#catSort').value, score=function(p){return (so==='pop'?p.tags.indexOf('hit')>=0:so==='new'?p.tags.indexOf('new')>=0:p.stock)?0:1;};
@@ -168,10 +219,11 @@ var IMG={
   var views={home:$('#viewHome'),catalog:$('#viewCatalog'),product:$('#viewProduct'),about:$('#viewAbout')};
   function show(v){Object.keys(views).forEach(function(k){views[k].hidden=k!==v;});}
   function route(){
-    var h=decodeURIComponent(location.hash.slice(1)); setDrop(false); setBurger(false);
+    var h=decodeURIComponent(location.hash.slice(1)); setDrop(false); setBurger(false); closePops();
     var m;
+    if((m=h.match(/^search\/(.+)$/))){show('catalog');st.slug='all';st.sub=null;st.f='all';st.q=m[1];$('#searchInput').value=m[1];renderCat();window.scrollTo(0,0);return;}
     if((m=h.match(/^catalog\/([\w-]+)(?:\/([\w-]+))?/))){
-      show('catalog'); st.slug=m[1]; st.sub=null; st.f='all';
+      show('catalog'); st.slug=m[1]; st.sub=null; st.f='all'; st.q='';
       if(m[2]){ if(SUBS[m[2]]&&m[1]==='tarelki') st.sub=m[2]; else if(TAG[m[2]]) st.f=m[2]; }
       renderCat(); window.scrollTo(0,0); return;
     }

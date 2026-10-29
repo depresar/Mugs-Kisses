@@ -25,12 +25,36 @@
     <a href="#footer">Доставка и оплата</a>
   </div>
   <div class="bar-icons">
-    <button type="button" class="ic" aria-label="Поиск"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button>
-    <button type="button" class="ic" aria-label="Избранное"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 017-2.6A4 4 0 0119 10c0 5.6-7 10-7 10z"/></svg><span class="cnt" id="favCount">0</span></button>
-    <button type="button" class="ic" aria-label="Корзина"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 10h16l-1.6 9a2 2 0 01-2 1.6H7.6a2 2 0 01-2-1.6L4 10z"/><path d="M8 10l4-6 4 6"/></svg><span class="cnt" id="cartCount">0</span></button>
+    <button type="button" class="ic" id="searchBtn" aria-label="Поиск" aria-expanded="false" aria-controls="searchPop"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button>
+    <button type="button" class="ic" id="favBtn" aria-label="Избранное" aria-expanded="false" aria-controls="favPop"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 017-2.6A4 4 0 0119 10c0 5.6-7 10-7 10z"/></svg><span class="cnt" id="favCount">0</span></button>
+    <button type="button" class="ic" id="cartBtn" aria-label="Корзина" aria-expanded="false" aria-controls="cartPop"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 10h16l-1.6 9a2 2 0 01-2 1.6H7.6a2 2 0 01-2-1.6L4 10z"/><path d="M8 10l4-6 4 6"/></svg><span class="cnt" id="cartCount">0</span></button>
     <button type="button" class="ic burger" id="burger" aria-label="Открыть меню" aria-expanded="false" aria-controls="mnav">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path class="b-open" d="M4 7h16M4 12h16M4 17h10"/><path class="b-close" d="M6 6l12 12M18 6L6 18" style="display:none"/></svg>
     </button>
+  </div>
+
+
+  <div class="pop pop-search" id="searchPop" role="dialog" aria-label="Поиск по каталогу" hidden>
+    <form class="search-field" id="searchForm" role="search">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" style="color:var(--brown);flex:none"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <label class="sr" for="searchInput">Поиск</label>
+      <input id="searchInput" type="search" placeholder="Тарелка, лимоны, ваза…" autocomplete="off">
+      <button type="button" class="ic pop-x" data-pop-close aria-label="Закрыть поиск"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </form>
+    <ul class="pop-list" id="searchList"></ul>
+    <div id="searchMore"></div>
+  </div>
+  <div class="pop" id="favPop" role="dialog" aria-labelledby="favTitle" hidden>
+    <div class="pop-head"><span class="pop-title" id="favTitle">Избранное</span><button type="button" class="ic pop-x" data-pop-close aria-label="Закрыть"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    <ul class="pop-list" id="favList"></ul>
+  </div>
+  <div class="pop" id="cartPop" role="dialog" aria-labelledby="cartTitle" hidden>
+    <div class="pop-head"><span class="pop-title" id="cartTitle">Корзина</span><button type="button" class="ic pop-x" data-pop-close aria-label="Закрыть"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    <ul class="pop-list" id="cartList"></ul>
+    <div class="pop-foot" id="cartFoot" hidden>
+      <div class="pop-total"><span id="cartQty"></span><span>[СУММА] ₽</span></div>
+      <a class="btn" href="#order" id="checkout">Оформить заказ</a>
+    </div>
   </div>
 
   <div class="drop" id="catDrop" hidden>
@@ -73,15 +97,15 @@
     <a class="cat" data-slug="tarelki" href="#catalog/tarelki">
       <span class="cat-pic"><img class="round spin" src="img/icon-plates.jpg" alt=""></span><span class="cat-name">тарелки</span></a>
     <a class="cat" data-slug="chashki" href="#catalog/chashki">
-      <span class="cat-pic"><img class="round" src="img/icon-cups.jpg" alt=""></span><span class="cat-name">чашки</span></a>
+      <span class="cat-pic"><img class="round spin" src="img/icon-cups.jpg" alt="" style="animation-direction:reverse"></span><span class="cat-name">чашки</span></a>
     <a class="cat" data-slug="vazy" href="#catalog/vazy">
-      <span class="cat-pic"><img class="round" src="img/icon-vases.jpg" alt=""></span><span class="cat-name">вазы</span></a>
+      <span class="cat-pic"><img class="round spin" src="img/icon-vases.jpg" alt=""></span><span class="cat-name">вазы</span></a>
     <a class="cat" data-slug="plitka" href="#catalog/plitka">
-      <span class="cat-pic"><img class="round spin" src="img/icon-tiles.jpg" alt="" style="animation-duration:60s;animation-direction:reverse"></span><span class="cat-name">плитка</span></a>
+      <span class="cat-pic"><img class="round spin" src="img/icon-tiles.jpg" alt="" style="animation-direction:reverse"></span><span class="cat-name">плитка</span></a>
     <a class="cat" data-slug="shkatulki" href="#catalog/shkatulki">
-      <span class="cat-pic"><img class="round" src="img/icon-boxes.jpg" alt=""></span><span class="cat-name">шкатулки</span></a>
+      <span class="cat-pic"><img class="round spin" src="img/icon-boxes.jpg" alt=""></span><span class="cat-name">шкатулки</span></a>
     <a class="cat" data-slug="igrushki" href="#catalog/igrushki">
-      <span class="cat-pic"><img class="round" src="img/icon-toys.jpg" alt=""></span><span class="cat-name">игрушки</span></a>
+      <span class="cat-pic"><img class="round spin" src="img/icon-toys.jpg" alt="" style="animation-direction:reverse"></span><span class="cat-name">игрушки</span></a>
   </nav>
 </div>
 </section>
@@ -137,7 +161,7 @@
 <section class="sec" id="masterclass" aria-labelledby="mc-h">
 <div class="wrap">
   <div class="mc-head">
-    <h2 class="mc-title" id="mc-h">Мастер-классы по&nbsp;созданию керамики с&nbsp;винным сопровождением в&nbsp;Нижнем Новгороде</h2>
+    <h2 class="mc-title" id="mc-h">Мастер-классы по&nbsp;созданию керамики<br> с&nbsp;винным сопровождением в&nbsp;Нижнем&nbsp;Новгороде</h2>
     <button type="button" class="btn" data-open-mc="group">Записаться</button>
   </div>
   <img class="mc-photo" src="img/masterclass-group.jpg" alt="Гости мастер-класса расписывают посуду за общим столом">
@@ -150,12 +174,14 @@
 <div class="island">
   <div class="sec-head">
     <div><div class="hand">тёплые слова</div><h2 class="h2" id="rev-h">Отзывы</h2></div>
-    <button type="button" class="btn btn-ghost" id="openRev" style="min-height:52px">Оставить отзыв</button>
+    <div class="rev-tools"><button type="button" class="btn btn-ghost" id="openRev" style="min-height:52px;margin-right:8px">Оставить отзыв</button><button type="button" class="arrow" data-scroll="revList" data-dir="-1" aria-label="Листать назад"><svg width="18" height="12" viewBox="0 0 18 12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M17 6H2M7 1L2 6l5 5"/></svg></button><button type="button" class="arrow" data-scroll="revList" data-dir="1" aria-label="Листать вперёд"><svg width="18" height="12" viewBox="0 0 18 12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M1 6h15M11 1l5 5-5 5"/></svg></button></div>
   </div>
-  <div class="reviews" id="revList">
+  <div class="track rev-track" id="revList" tabindex="0" aria-label="Отзывы, листайте вбок">
     <figure class="rev"><div class="stars" role="img" aria-label="Оценка 5 из 5"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg></div><blockquote>[Текст отзыва покупателя]</blockquote><figcaption><span class="ava" aria-hidden="true">А</span><span><span style="display:block">[Имя]</span><span class="meta">[Купленное изделие]</span></span></figcaption></figure>
     <figure class="rev"><div class="stars" role="img" aria-label="Оценка 5 из 5"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg></div><blockquote>[Текст отзыва покупателя]</blockquote><figcaption><span class="ava" aria-hidden="true">М</span><span><span style="display:block">[Имя]</span><span class="meta">[Купленное изделие]</span></span></figcaption></figure>
     <figure class="rev"><div class="stars" role="img" aria-label="Оценка 5 из 5"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg></div><blockquote>[Текст отзыва гостя]</blockquote><figcaption><span class="ava" aria-hidden="true">Е</span><span><span style="display:block">[Имя]</span><span class="meta">Мастер-класс</span></span></figcaption></figure>
+    <figure class="rev"><div class="stars" role="img" aria-label="Оценка 5 из 5"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg></div><blockquote>[Пример длинного отзыва. Если покупатель напишет много, карточка не растягивается: после шести строк текст сворачивается, и появляется кнопка «Читать полностью». По нажатию отзыв раскрывается целиком, а соседние карточки остаются ровными. Здесь будет настоящий текст отзыва покупателя о посуде, упаковке и доставке.]</blockquote><figcaption><span class="ava" aria-hidden="true">О</span><span><span style="display:block">[Имя]</span><span class="meta">[Купленное изделие]</span></span></figcaption></figure>
+    <figure class="rev"><div class="stars" role="img" aria-label="Оценка 5 из 5"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg></div><blockquote>[Текст отзыва покупателя]</blockquote><figcaption><span class="ava" aria-hidden="true">Н</span><span><span style="display:block">[Имя]</span><span class="meta">[Купленное изделие]</span></span></figcaption></figure>
   </div>
 </div>
 </div>
