@@ -409,3 +409,8 @@ a{color:var(--brown)}a:hover{color:var(--brown-d)}
   .mc-head .btn{width:100%}
   .author-name{font-size:28px}
 }
+
+/* ёлочная игрушка качается на ленте */
+@keyframes swing{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
+.cat-pic .swing{animation:swing 3.6s ease-in-out infinite;transform-origin:50% 0}
+.cat:hover .swing{animation-duration:1.4s}
