@@ -415,3 +415,8 @@ a{color:var(--brown)}a:hover{color:var(--brown-d)}
 @keyframes swing{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
 .cat-pic .swing{animation:swing 3.6s ease-in-out infinite;transform-origin:50% 0}
 .cat:hover .swing{animation-duration:1.4s}
+
+/* разделы: фото с родным фоном в кружке */
+.cat-pic img.round{border-radius:50%;object-fit:cover;filter:none;box-shadow:0 10px 24px rgba(74,45,23,.16)}
+.cat:hover .cat-pic img.round{transform:scale(1.05);transition:transform .35s ease}
+.cat:hover .cat-pic img.round.spin{transform:none}
