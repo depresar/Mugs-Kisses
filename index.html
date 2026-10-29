@@ -92,7 +92,7 @@
 <main id="viewHome">
 <section class="hero" aria-label="Разделы каталога">
 <div class="wrap">
-  <h1 class="hero-title"><span class="brand">Mugs &amp; Kisses</span><span class="dash" aria-hidden="true">—</span><span class="hand">фарфоровая посуда для особенных случаев</span></h1>
+  <h1 class="hero-title"><span class="brand">Mugs &amp; Kisses</span><span class="dash" aria-hidden="true">—</span><span class="sub">фарфоровая посуда для особенных случаев</span></h1>
   <nav class="cats" aria-label="Разделы каталога">
     <a class="cat" data-slug="tarelki" href="#catalog/tarelki">
       <span class="cat-pic"><img class="round spin" src="img/icon-plates.jpg" alt=""></span><span class="cat-name">тарелки</span></a>
@@ -110,16 +110,15 @@
 </div>
 </section>
 
-<!-- как делается фарфор -->
-<section class="sec" aria-labelledby="porc-h">
+<!-- новинки -->
+<section class="sec" id="new" aria-labelledby="rail-new-h">
 <div class="wrap">
-  <div class="porc">
-    <div class="porc-text">
-      <div class="hand">как делается фарфор?</div>
-      <h2 class="h2" id="porc-h">Не&nbsp;менее 48&nbsp;часов в&nbsp;печи</h2>
-      <a class="btn btn-ghost" href="#about">Читать подробнее <svg width="18" height="12" viewBox="0 0 18 12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M1 6h15M11 1l5 5-5 5"/></svg></a>
-    </div>
-    <img class="porc-photo" src="img/porcelain-square.jpg" alt="Нерасписанная фарфоровая посуда после первого обжига">
+  <div class="rail" aria-labelledby="rail-new-h">
+    <div class="rail-head"><div><div class="hand">только из печи</div><h2 id="rail-new-h">Новинки</h2></div>
+      <div class="rail-nav"><a class="link-arrow" href="#catalog/all/new" style="margin-right:10px">Все новинки</a>
+        <button type="button" class="arrow" data-scroll="trackNew" data-dir="-1" aria-label="Листать назад"><svg width="18" height="12" viewBox="0 0 18 12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M17 6H2M7 1L2 6l5 5"/></svg></button>
+        <button type="button" class="arrow" data-scroll="trackNew" data-dir="1" aria-label="Листать вперёд"><svg width="18" height="12" viewBox="0 0 18 12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M1 6h15M11 1l5 5-5 5"/></svg></button></div></div>
+    <div class="track" id="trackNew" tabindex="0" aria-label="Новинки, листайте вбок"></div>
   </div>
 </div>
 </section>
@@ -132,13 +131,19 @@
     <a class="link-arrow" href="#catalog/all">Смотреть весь каталог <svg width="18" height="12" viewBox="0 0 18 12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M1 6h15M11 1l5 5-5 5"/></svg></a>
   </div>
   <div class="grid-cards" id="homeGrid"></div>
-  <hr class="divider">
-  <div class="rail" aria-labelledby="rail-new-h" style="margin-top:0">
-    <div class="rail-head"><div><div class="hand">только из печи</div><h2 id="rail-new-h">Новинки</h2></div>
-      <div class="rail-nav"><a class="link-arrow" href="#catalog/all/new" style="margin-right:10px">Все новинки</a>
-        <button type="button" class="arrow" data-scroll="trackNew" data-dir="-1" aria-label="Листать назад"><svg width="18" height="12" viewBox="0 0 18 12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M17 6H2M7 1L2 6l5 5"/></svg></button>
-        <button type="button" class="arrow" data-scroll="trackNew" data-dir="1" aria-label="Листать вперёд"><svg width="18" height="12" viewBox="0 0 18 12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M1 6h15M11 1l5 5-5 5"/></svg></button></div></div>
-    <div class="track" id="trackNew" tabindex="0" aria-label="Новинки, листайте вбок"></div>
+</div>
+</section>
+
+<!-- как делается фарфор -->
+<section class="sec" aria-labelledby="porc-h">
+<div class="wrap">
+  <div class="porc">
+    <div class="porc-text">
+      <div class="hand">как делается фарфор?</div>
+      <h2 class="h2" id="porc-h">Не&nbsp;менее 48&nbsp;часов в&nbsp;печи</h2>
+      <a class="btn btn-ghost" href="#about">Читать подробнее <svg width="18" height="12" viewBox="0 0 18 12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M1 6h15M11 1l5 5-5 5"/></svg></a>
+    </div>
+    <img class="porc-photo" src="img/porcelain-square.jpg" alt="Нерасписанная фарфоровая посуда после первого обжига">
   </div>
 </div>
 </section>
