@@ -558,3 +558,31 @@ a{color:var(--brown)}a:hover{color:var(--brown-d)}
   .cats .cat:nth-child(6) img{animation-delay:10s !important}
 }
 @media (prefers-reduced-motion:reduce){.cats .cat img{animation:none !important}}
+
+/* ===== v11: только контур, при наведении фото внутри контура ===== */
+.cat-pic .sk{z-index:2;opacity:1 !important;filter:none}
+.cat-pic .col{z-index:1}
+@media (hover:none){.cats .cat .sk{animation:none !important}}
+
+/* фраза над разделами: мягкая плашка с тонкими линиями по бокам */
+.hero-title{display:flex;align-items:center;justify-content:center;gap:18px;max-width:900px;margin:0 auto 34px;flex-wrap:nowrap}
+.hero-title .orn{flex:1;min-width:24px;height:1px;position:relative;background:linear-gradient(90deg,rgba(107,68,38,0),rgba(107,68,38,.35))}
+.hero-title .orn:last-child{background:linear-gradient(90deg,rgba(107,68,38,.35),rgba(107,68,38,0))}
+.hero-title .orn::after{content:'';position:absolute;top:50%;width:6px;height:6px;border-radius:50%;background:var(--ochre);transform:translateY(-50%)}
+.hero-title .orn:first-child::after{right:-3px}
+.hero-title .orn:last-child::after{left:-3px}
+.hero-pill{display:inline-flex;align-items:baseline;gap:12px;background:var(--bg2);border-radius:40px;padding:12px 28px;white-space:nowrap}
+.hero-title .dash{font-size:18px;color:var(--ochre);line-height:1}
+@media (max-width:900px){
+  .hero-title{gap:10px;margin-bottom:24px;flex-direction:row}
+  .hero-pill{flex-direction:column;align-items:center;gap:2px;padding:10px 20px;border-radius:22px;white-space:normal;text-align:center}
+  .hero-title .dash{display:none}
+  .hero-title .orn{min-width:14px}
+}
+@media (max-width:900px){
+  .hero-pill{flex:0 1 auto;max-width:300px;padding:10px 16px}
+  .hero-title .sub{white-space:nowrap}
+  .hero-title .sub{font-size:12.5px}
+  .hero-title .brand{font-size:15px}
+  .hero-title .orn{min-width:30px}
+}
