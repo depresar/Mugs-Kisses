@@ -586,3 +586,16 @@ a{color:var(--brown)}a:hover{color:var(--brown-d)}
   .hero-title .brand{font-size:15px}
   .hero-title .orn{min-width:30px}
 }
+
+/* ===== v12: название бренда крупным заголовком, подпись той же ширины ===== */
+.hero{padding-top:72px}
+.hero-title{display:flex;flex-direction:column;align-items:center;gap:14px;max-width:none;margin:0 auto 72px;font-family:var(--sans);text-align:center}
+.hero-title .orn,.hero-title .dash{display:none}
+.hero-title .brand{font-family:var(--sans);font-weight:500;font-size:clamp(38px,5.4vw,72px);line-height:1;letter-spacing:.06em;margin-right:-.06em;text-transform:uppercase;color:var(--ink);white-space:nowrap}
+.hero-title .sub{font-family:var(--sans);font-weight:400;font-size:15px;line-height:1.2;text-transform:uppercase;color:var(--ink2);white-space:nowrap;background:none;padding:0}
+@media (max-width:900px){
+  .hero{padding-top:40px}
+  .hero-title{gap:10px;margin-bottom:40px}
+  .hero-title .brand{font-size:clamp(28px,8.6vw,40px)}
+  .hero-title .sub{font-size:11px}
+}

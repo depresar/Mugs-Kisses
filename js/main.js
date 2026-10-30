@@ -236,6 +236,16 @@ var IMG={
   }
   window.addEventListener('hashchange',route); route();
 
+  /* подпись под названием бренда растягивается ровно по ширине названия */
+  function fitTagline(){var t=$('.hero-title'); if(!t||t.offsetParent===null)return; var br=$('.brand',t), sb=$('.sub',t);
+    sb.style.letterSpacing='0px'; sb.style.marginRight='0px'; sb.style.fontSize='';
+    var target=br.getBoundingClientRect().width, w=sb.getBoundingClientRect().width, n=sb.textContent.length-1;
+    if(w>target*0.92){var fs=parseFloat(getComputedStyle(sb).fontSize)*target*0.92/w; sb.style.fontSize=fs+'px'; w=sb.getBoundingClientRect().width;}
+    if(n>0&&target>w){var ls=(target-w)/n; sb.style.letterSpacing=ls+'px'; sb.style.marginRight=(-ls)+'px';}}
+  fitTagline(); window.addEventListener('resize',fitTagline); window.addEventListener('load',fitTagline);
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitTagline);
+  window.addEventListener('hashchange',function(){setTimeout(fitTagline,0);});
+
   /* ===== анимированные цифры ===== */
   var nums=$$('.num[data-count]');
   function run(el){var to=+el.dataset.count,suf=el.dataset.suffix||'',t0=null,dur=1600;function step(t){if(!t0)t0=t;var k=Math.min((t-t0)/dur,1),e=1-Math.pow(1-k,3);el.textContent=Math.round(to*e)+suf;if(k<1)requestAnimationFrame(step);}requestAnimationFrame(step);}
