@@ -238,10 +238,10 @@ var IMG={
 
   /* подпись под названием бренда растягивается ровно по ширине названия */
   function fitTagline(){var t=$('.hero-title'); if(!t||t.offsetParent===null)return; var br=$('.brand',t), sb=$('.sub',t);
-    sb.style.letterSpacing='0px'; sb.style.marginRight='0px'; sb.style.fontSize='';
-    var target=br.getBoundingClientRect().width, w=sb.getBoundingClientRect().width, n=sb.textContent.length-1;
-    if(w>target*0.92){var fs=parseFloat(getComputedStyle(sb).fontSize)*target*0.92/w; sb.style.fontSize=fs+'px'; w=sb.getBoundingClientRect().width;}
-    if(n>0&&target>w){var ls=(target-w)/n; sb.style.letterSpacing=ls+'px'; sb.style.marginRight=(-ls)+'px';}}
+    sb.style.letterSpacing=''; sb.style.marginRight=''; sb.style.fontSize='';
+    br.style.fontSize='100px';
+    var wb=br.getBoundingClientRect().width, ws=sb.getBoundingClientRect().width;
+    if(wb>0&&ws>0) br.style.fontSize=(100*ws/wb)+'px';}
   fitTagline(); window.addEventListener('resize',fitTagline); window.addEventListener('load',fitTagline);
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitTagline);
   window.addEventListener('hashchange',function(){setTimeout(fitTagline,0);});

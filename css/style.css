@@ -599,3 +599,15 @@ a{color:var(--brown)}a:hover{color:var(--brown-d)}
   .hero-title .brand{font-size:clamp(28px,8.6vw,40px)}
   .hero-title .sub{font-size:11px}
 }
+
+/* ===== v13: подпись — своим размером, название растягивается до её ширины ===== */
+.hero{padding-top:104px}
+.hero-title{display:flex !important;flex-direction:column !important;align-items:center;gap:12px;margin:0 auto 104px}
+.hero-title .brand{font-size:44px;letter-spacing:.04em;margin-right:-.04em;line-height:1;white-space:nowrap}
+.hero-title .sub{font-size:18px;text-transform:none;letter-spacing:0;color:var(--ink2);white-space:nowrap}
+@media (max-width:900px){
+  .hero{padding-top:64px}
+  .hero-title{gap:10px;margin-bottom:64px}
+  .hero-title .sub{font-size:16px}
+}
+@media (max-width:380px){.hero-title .sub{font-size:14.5px}}
