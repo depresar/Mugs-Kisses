@@ -525,9 +525,6 @@ a{color:var(--brown)}a:hover{color:var(--brown-d)}
 }
 
 @media (max-width:900px){
-  /* порядок разделов на телефоне: вазы, тарелки, шкатулки / плитка, чашки, игрушки */
-  .cat[data-slug="vazy"]{order:1}.cat[data-slug="tarelki"]{order:2}.cat[data-slug="shkatulki"]{order:3}
-  .cat[data-slug="plitka"]{order:4}.cat[data-slug="chashki"]{order:5}.cat[data-slug="igrushki"]{order:6}
   .cat-name{font-size:23px}
   .mini-name{font-size:18px}
   .hand{font-size:25px}
@@ -540,3 +537,24 @@ a{color:var(--brown)}a:hover{color:var(--brown-d)}
 @media (max-width:900px){.cats{margin-top:0}}
 
 #new .rail{margin-top:0}
+
+/* ===== v10: разделы — рисованный контур, при наведении проявляется цветное фото ===== */
+.cat-pic,.cat-pic img{animation:none !important}
+.cat-pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;filter:none;border-radius:0;box-shadow:none;scale:1;transition:opacity .5s ease}
+.cat-pic .col{opacity:0;filter:drop-shadow(0 8px 14px rgba(74,45,23,.14))}
+.cat:hover .col,.cat:focus-visible .col,.mini:hover .col,.mini[aria-current="page"] .col{opacity:1}
+.cat:hover .sk,.cat:focus-visible .sk,.mini:hover .sk,.mini[aria-current="page"] .sk{opacity:0}
+.empty .sk{display:none}.empty .col{opacity:1}
+/* на телефоне наведения нет — изделия по очереди «проявляются» сами */
+@media (hover:none){
+  @keyframes reveal-col{0%,8%{opacity:0}16%,42%{opacity:1}50%,100%{opacity:0}}
+  @keyframes reveal-sk{0%,8%{opacity:1}16%,42%{opacity:0}50%,100%{opacity:1}}
+  .cats .cat .col{animation:reveal-col 12s ease-in-out infinite !important}
+  .cats .cat .sk{animation:reveal-sk 12s ease-in-out infinite !important}
+  .cats .cat:nth-child(2) img{animation-delay:2s !important}
+  .cats .cat:nth-child(3) img{animation-delay:4s !important}
+  .cats .cat:nth-child(4) img{animation-delay:6s !important}
+  .cats .cat:nth-child(5) img{animation-delay:8s !important}
+  .cats .cat:nth-child(6) img{animation-delay:10s !important}
+}
+@media (prefers-reduced-motion:reduce){.cats .cat img{animation:none !important}}
